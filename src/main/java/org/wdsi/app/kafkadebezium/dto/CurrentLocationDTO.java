@@ -1,7 +1,5 @@
 package org.wdsi.app.kafkadebezium.dto;
 
-import org.apache.kafka.streams.KeyValue;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +15,8 @@ public class CurrentLocationDTO {
 	private String longitude;
 	
 	public String toString () {
-		return latitude;
+		return new StringBuffer(latitude).append(",").append(longitude)
+				.append(",").append(truckId).toString();
 	}
 	
 	

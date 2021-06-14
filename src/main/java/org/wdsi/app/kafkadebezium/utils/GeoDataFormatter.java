@@ -32,7 +32,10 @@ public class GeoDataFormatter {
 			LOGGER.warn("Value not found");
 			return CurrentLocationDTO.builder().build();
 		}
-		return CurrentLocationDTO.builder().latitude(afterMap.get("latitude").toString()).build();
+		return CurrentLocationDTO.builder().latitude(afterMap.get("latitude").toString())
+				.longitude(afterMap.get("longitude").toString())
+				.truckId(afterMap.get("vehicleid").toString())
+				.build();
 	}
 	public static String formatGeoKey (String value) {
 		Map<String, Object> map = getJsonMap(formatDebeziumValue(value));
