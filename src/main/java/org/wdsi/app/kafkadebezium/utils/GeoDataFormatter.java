@@ -3,8 +3,6 @@ package org.wdsi.app.kafkadebezium.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.kafka.common.protocol.types.Field.Str;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
