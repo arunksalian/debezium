@@ -28,6 +28,10 @@ public class GeoDataFormatter {
 	public static CurrentLocationDTO formatGeoValue (String value) {
 		Map<String, Object> map = getJsonMap(formatDebeziumValue(value));
 		Map<String, Object> afterMap =(Map<String, Object>) map.get("after");
+		if (afterMap == null) {
+			LOGGER.warn("Value not found");
+			return CurrentLocationDTO.builder().build();
+		}
 		return CurrentLocationDTO.builder().latitude(afterMap.get("latitude").toString()).build();
 	}
 	public static String formatGeoKey (String value) {
