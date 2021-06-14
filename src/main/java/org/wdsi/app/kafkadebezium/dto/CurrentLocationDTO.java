@@ -2,28 +2,23 @@ package org.wdsi.app.kafkadebezium.dto;
 
 import org.apache.kafka.streams.KeyValue;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CurrentLocationDTO extends KeyValue<String, String> {
-
-	
-
-
+@Builder
+public class CurrentLocationDTO {
 
 	private String truckId;
 	private String geoTime;
 	private String latitude;
 	private String longitude;
 	
-	public CurrentLocationDTO(String key, String value) {
-		super(key, value);
+	public String toString () {
+		return latitude;
 	}
 	
 	
-	public static  KeyValue<String, String> getNew(String key, String value) {
-		return null;
-	}
 }
