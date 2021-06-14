@@ -49,7 +49,8 @@ public class GeoDataFormatter {
 	private static Map<String, Object> getJsonMap (String json) {
 		ObjectMapper mapper = new ObjectMapper ();
 		try {
-			return mapper.readValue(json, Map.class);
+			if (json != null)
+				return mapper.readValue(json, Map.class);
 		} catch (JsonProcessingException e) {
 			//LOGGER.error("Failed to parse json", e);
 		}
