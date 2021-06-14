@@ -25,7 +25,8 @@ public class GeoDataFormatter {
 	}
 	
 	public static String formatGeoValue (String value) {
-		return value;
+		Map<String, String> map = getJsonMap(formatDebeziumValue(value));
+		return map.get("vehicleid");
 	}
 	public static String formatGeoKey (String value) {
 		Map<String, String> map = getJsonMap(formatDebeziumValue(value));

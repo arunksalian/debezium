@@ -33,7 +33,7 @@ public class DestForcaster {
 		final StreamsBuilder builder = new StreamsBuilder();
 		
 		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
-		stream.map((key, value)->KeyValue.pair(GeoDataFormatter.formatGeoKey(key), GeoDataFormatter.formatDebeziumValue(value)))
+		stream.map((key, value)->KeyValue.pair(GeoDataFormatter.formatGeoKey(key), GeoDataFormatter.formatGeoValue(value)))
 		.foreach((k, v)->{
 			LOGGER.info("Key:{}, value:{}", k, v);
 		});
