@@ -52,7 +52,7 @@ public class GeoDataFormatter {
 			if (json != null)
 				return mapper.readValue(json, Map.class);
 		} catch (JsonProcessingException e) {
-			//LOGGER.error("Failed to parse json", e);
+			LOGGER.error("Failed to parse json", e);
 		}
 		return new HashMap<String, Object>();
 	}

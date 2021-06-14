@@ -19,5 +19,9 @@ public class CurrentLocationDTO {
 				.append(",").append(truckId).toString();
 	}
 	
+	public boolean amIValid () {
+		return truckId !=null && latitude != null && longitude != null;
+	}
+	
 	
 }
