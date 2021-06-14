@@ -6,13 +6,18 @@ import javax.annotation.PostConstruct;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.wdsi.app.kafkadebezium.dto.CurrentLocationDTO;
 import org.wdsi.app.kafkadebezium.utils.Constants;
+import org.wdsi.app.kafkadebezium.utils.GeoDataFormatter;
 
 @Component
 public class DestForcaster {
@@ -26,9 +31,13 @@ public class DestForcaster {
 	
 	public void initStream () {
 		final StreamsBuilder builder = new StreamsBuilder();
-		builder.stream(Constants.INPUT_TOPIC).foreach((k,v)->{
-			LOGGER.info("key:{}, value:{}", k, v);	
+		
+		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
+		stream.map((key, value)->KeyValue.pair(GeoDataFormatter.formatDebeziumValue(key), GeoDataFormatter.formatDebeziumValue(key)))
+		.foreach((k, v)->{
+			LOGGER.info("Key:{}, value:{}", k, v);
 		});
+		
 		final Topology topology = builder.build();
 		try {
 			geoStream = new KafkaStreams(topology, getProperties());
