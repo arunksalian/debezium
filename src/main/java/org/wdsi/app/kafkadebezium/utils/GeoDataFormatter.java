@@ -13,6 +13,7 @@ public class GeoDataFormatter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GeoDataFormatter.class);
 	public static String formatDebeziumValue (String value) {
+		LOGGER.info("Value::{}", value);
 		if(!value.startsWith("{")) {
 			int i = value.indexOf("{");
 			if (i > 0) {
