@@ -39,7 +39,9 @@ public class DestForcaster {
 		
 		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
 		stream.map((key, value)->KeyValue.pair(GeoDataFormatter.formatGeoKey(key), GeoDataFormatter.formatGeoValue(value)))
-		.filter((k,v)->v !=null && v.amIValid()).groupByKey().aggregate(initializer, aggregator);
+		.filter((k,v)->v !=null && v.amIValid()).groupByKey().aggregate(initializer, aggregator).toStream().foreach((k, v)->{
+			LOGGER.info("key:{}, value:{}", k, v);
+		});
 		
 		
 		final Topology topology = builder.build();
