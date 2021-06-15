@@ -30,10 +30,11 @@ public class DestForcaster {
 	@PostConstruct
 	public void init () {
 		initStream ();
-		initializer = TruckStatus::new;
+		
 	}
 	
 	public void initStream () {
+		initializer = TruckStatus::new;
 		final StreamsBuilder builder = new StreamsBuilder();
 		
 		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
