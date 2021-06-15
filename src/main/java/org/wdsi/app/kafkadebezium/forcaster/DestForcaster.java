@@ -10,23 +10,27 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.Aggregator;
+import org.apache.kafka.streams.kstream.Initializer;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.wdsi.app.kafkadebezium.dto.CurrentLocationDTO;
+import org.wdsi.app.kafkadebezium.dto.TruckStatus;
 import org.wdsi.app.kafkadebezium.utils.Constants;
 import org.wdsi.app.kafkadebezium.utils.GeoDataFormatter;
 
 @Component
 public class DestForcaster {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DestForcaster.class);
-	private KafkaStreams geoStream = null;
+	
+	private Initializer<TruckStatus> initializer;
+	private Aggregator<String, org.wdsi.app.kafkadebezium.dto.GeoDTO, TruckStatus> aggregator = null;
 	
 	@PostConstruct
 	public void init () {
 		initStream ();
+		initializer = TruckStatus::new;
 	}
 	
 	public void initStream () {
@@ -34,14 +38,12 @@ public class DestForcaster {
 		
 		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
 		stream.map((key, value)->KeyValue.pair(GeoDataFormatter.formatGeoKey(key), GeoDataFormatter.formatGeoValue(value)))
-		.filter((k,v)->v !=null && v.amIValid())
-		.foreach((k, v)->{
-			LOGGER.info("Key:{}, value:{}", k, v);
-		});
+		.filter((k,v)->v !=null && v.amIValid()).groupByKey().aggregate(initializer, aggregator);
+		
 		
 		final Topology topology = builder.build();
-		try {
-			geoStream = new KafkaStreams(topology, getProperties());
+		try (KafkaStreams geoStream = new KafkaStreams(topology, getProperties())) {
+			
 			geoStream.start();
 		} catch (Exception e) {
 			LOGGER.error("Failed to start stream.", e);

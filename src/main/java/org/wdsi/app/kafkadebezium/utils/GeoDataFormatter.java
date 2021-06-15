@@ -1,11 +1,12 @@
 package org.wdsi.app.kafkadebezium.utils;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wdsi.app.kafkadebezium.dto.CurrentLocationDTO;
+import org.wdsi.app.kafkadebezium.dto.GeoDTO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class GeoDataFormatter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GeoDataFormatter.class);
+
+	
 	public static String formatDebeziumValue (String value) {
 		LOGGER.info("Value::{}", value);
 		if(value != null && !value.startsWith("{")) {
@@ -25,16 +28,17 @@ public class GeoDataFormatter {
 		return value;
 	}
 	
-	public static CurrentLocationDTO formatGeoValue (String value) {
+	public static GeoDTO formatGeoValue (String value) {
 		Map<String, Object> map = getJsonMap(formatDebeziumValue(value));
 		Map<String, Object> afterMap =(Map<String, Object>) map.get("after");
 		if (afterMap == null) {
 			LOGGER.warn("Value not found");
-			return CurrentLocationDTO.builder().build();
+			return GeoDTO.builder().build();
 		}
-		return CurrentLocationDTO.builder().latitude(afterMap.get("latitude").toString())
+		return GeoDTO.builder().latitude(afterMap.get("latitude").toString())
 				.longitude(afterMap.get("longitude").toString())
 				.truckId(afterMap.get("vehicleid").toString())
+				.date(LocalDateTime.parse(afterMap.get("geo_time").toString()))
 				.build();
 	}
 	public static String formatGeoKey (String value) {
