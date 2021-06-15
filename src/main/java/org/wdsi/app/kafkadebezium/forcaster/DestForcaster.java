@@ -25,7 +25,6 @@ public class DestForcaster {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DestForcaster.class);
 	
 	private Initializer<TruckStatus> initializer;
-	private Aggregator<String, org.wdsi.app.kafkadebezium.dto.GeoDTO, TruckStatus> aggregator = null;
 	
 	@PostConstruct
 	public void init () {
@@ -35,6 +34,7 @@ public class DestForcaster {
 	
 	public void initStream () {
 		initializer = TruckStatus::new;
+		Aggregator<String, org.wdsi.app.kafkadebezium.dto.GeoDTO, TruckStatus> aggregator = (k, v, i) -> i.add(v);
 		final StreamsBuilder builder = new StreamsBuilder();
 		
 		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
