@@ -33,6 +33,7 @@ public class DestForcaster {
 	}
 	
 	public void initStream () {
+		LOGGER.info("initializing kafka stream");
 		initializer = TruckStatus::new;
 		Aggregator<String, org.wdsi.app.kafkadebezium.dto.GeoDTO, TruckStatus> aggregator = (k, v, i) -> i.add(v);
 		final StreamsBuilder builder = new StreamsBuilder();
