@@ -40,6 +40,7 @@ public class DestForcaster {
 		final StreamsBuilder builder = new StreamsBuilder();
 		
 		KStream<String, String> stream = builder.stream(Constants.INPUT_TOPIC);
+		
 		stream.foreach((k, v)->{
 			LOGGER.info("key:{}, value:{}", k, v);
 		});
@@ -52,9 +53,13 @@ public class DestForcaster {
 		
 		final Topology topology = builder.build();
 		try (KafkaStreams geoStream = new KafkaStreams(topology, getProperties())) {
-			
+			geoStream.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+				 public void uncaughtException(Thread thread, Throwable throwable) {
+					 LOGGER.error("Failed to start stream:{}", throwable);
+				}
+			});
 			geoStream.start();
-			LOGGER.info(" created stream details:{}", stream.toString());
+			LOGGER.info(" started stream details:{}", stream.toString());
 		} catch (Exception e) {
 			LOGGER.error("Failed to start stream.", e);
 		}
