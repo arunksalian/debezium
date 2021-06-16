@@ -49,6 +49,7 @@ public class DestForcaster {
 		try (KafkaStreams geoStream = new KafkaStreams(topology, getProperties())) {
 			
 			geoStream.start();
+			LOGGER.info(" created stream details:{}", stream.toString());
 		} catch (Exception e) {
 			LOGGER.error("Failed to start stream.", e);
 		}

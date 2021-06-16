@@ -42,6 +42,7 @@ public class GeoDataFormatter {
 				.build();
 	}
 	public static String formatGeoKey (String value) {
+		LOGGER.info("key :{}",value);
 		Map<String, Object> map = getJsonMap(formatDebeziumValue(value));
 		String vehicleId = map.get("vehicleid").toString();
 		LOGGER.info("vehicle id extracted :{}",vehicleId);
