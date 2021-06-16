@@ -55,7 +55,7 @@ public class DestForcaster {
 		try (KafkaStreams geoStream = new KafkaStreams(topology, getProperties())) {
 			geoStream.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 				 public void uncaughtException(Thread thread, Throwable throwable) {
-					 LOGGER.error("Failed to start stream:{}", throwable);
+					 LOGGER.error("Failed to start stream:{}", throwable.toString(), throwable);
 				}
 			});
 			geoStream.start();
