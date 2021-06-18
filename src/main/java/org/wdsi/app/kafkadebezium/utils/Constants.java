@@ -4,7 +4,7 @@ public class Constants {
 
 	private Constants () {}
 	//public static final String INPUT_TOPIC = "MySQLDebJsonSchema.kafka.geo_location";
-	public static final String INPUT_TOPIC = "test";
+	public static final String INPUT_TOPIC = "Geo.kafka_sink.GEO_TRACING";
 	
 	
 }
